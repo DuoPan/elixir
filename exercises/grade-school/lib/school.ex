@@ -10,6 +10,13 @@ defmodule School do
   """
   @spec add(map, String.t(), integer) :: map
   def add(db, name, grade) do
+    if Map.has_key?(db, grade) do
+      list = Map.get(db, grade)
+      list2 = list ++ [name]
+      Map.merge(db, %{grade => list2})
+    else
+      Map.merge(db, %{grade => [name]})
+    end
   end
 
   @doc """
@@ -17,6 +24,11 @@ defmodule School do
   """
   @spec grade(map, integer) :: [String.t()]
   def grade(db, grade) do
+    if Map.has_key?(db, grade) do
+      Map.get(db, grade)
+    else
+      []
+    end
   end
 
   @doc """
@@ -24,5 +36,6 @@ defmodule School do
   """
   @spec sort(map) :: [{integer, [String.t()]}]
   def sort(db) do
+    Enum.map(db, fn {key, list} -> {key, Enum.sort(list)} end)
   end
 end
